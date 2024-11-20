@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "201837412577",
+    "project_id": "dan-gram",
+    "storage_bucket": "dan-gram.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201837412577:android:a251bd24fd527b7ea5b7a0",
+        "android_client_info": {
+          "package_name": "com.example.dangram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201837412577-2kqtmmavifnf6btph0aptthlpem4tkqv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dangram",
+            "certificate_hash": "c719633a25124da514bf50ddfa15090d86a73955"
+          }
+        },
+        {
+          "client_id": "201837412577-s2g341l29b18tdgod4qv4vlk5mkdmnd9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB02Ada2SJBf1E87SayXLUDIk_Q1O5xeGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201837412577-s2g341l29b18tdgod4qv4vlk5mkdmnd9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
