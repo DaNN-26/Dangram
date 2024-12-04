@@ -25,16 +25,19 @@ class MainActivity : ComponentActivity() {
         val statePluginFactory =
             StreamStatePluginFactory(config = StatePluginConfig(), appContext = this)
 
+        val chatClient = StreamModule.provideChatClient(
+            appContext = this,
+            offlinePluginFactory = offlinePluginFactory,
+            statePluginFactory = statePluginFactory
+        )
+
         val rootComponent = RealRootComponent(
             componentContext = defaultComponentContext(),
-            chatClient = StreamModule.provideChatClient(
-                appContext = this,
-                offlinePluginFactory = offlinePluginFactory,
-                statePluginFactory = statePluginFactory
-            ),
+            chatClient = chatClient,
             firebaseAuth = firebaseAuth,
             signInRepository = AuthModule.provideSignInRepository(firebaseAuth),
-            signUpRepository = AuthModule.provideSignUpRepository(firebaseAuth)
+            signUpRepository = AuthModule.provideSignUpRepository(firebaseAuth),
+            streamRepository = StreamModule.provideStreamRepository(chatClient)
         )
 
         setContent {

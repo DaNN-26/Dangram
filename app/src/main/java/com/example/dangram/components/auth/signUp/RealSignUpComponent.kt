@@ -7,20 +7,18 @@ import com.arkivanov.decompose.value.update
 import com.example.dangram.firebase.auth.signUp.domain.SignUpRepository
 import com.example.dangram.mvi.auth.signUp.SignUpIntent
 import com.example.dangram.mvi.auth.signUp.SignUpState
-import com.google.firebase.auth.FirebaseAuth
-import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.models.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RealSignUpComponent @Inject constructor(
     private val componentContext: ComponentContext,
     private val signUpRepository: SignUpRepository,
+    private val navigateToSignIn: () -> Unit,
     private val navigateToApp: () -> Unit,
-    private val chatClient: ChatClient,
-    private val firebaseAuth: FirebaseAuth
+    private val connectUser: (User) -> Unit
 ) : SignUpComponent, ComponentContext by componentContext {
 
     private val _state = MutableValue(
@@ -29,23 +27,29 @@ class RealSignUpComponent @Inject constructor(
 
     override val state = _state
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     override fun processIntent(intent: SignUpIntent) {
         when (intent) {
             is SignUpIntent.SignUp -> { signUp() }
+            is SignUpIntent.NavigateToSignIn -> { navigateToSignIn() }
             is SignUpIntent.OnEmailChanged -> { state.update { it.copy(email = intent.email) } }
             is SignUpIntent.OnPasswordChanged -> { state.update { it.copy(password = intent.password) } }
         }
     }
 
     private fun signUp() {
-        coroutineScope.launch {
+        scope.launch {
             try {
-                signUpRepository.signUp(state.value.email, state.value.password)
+                signUpRepository.signUp(
+                    email = state.value.email,
+                    password = state.value.password
+                ).let { user ->
+                    connectUser(user)
+                }
                 navigateToApp()
             } catch (e: Exception) {
-                Log.d("SignUp Error", e.message.toString())
+                Log.d("FirebaseSignUp Error", e.message.toString())
             }
         }
     }

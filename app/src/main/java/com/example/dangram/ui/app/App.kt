@@ -12,6 +12,7 @@ import com.example.dangram.components.app.AppComponent
 import com.example.dangram.components.app.AppComponent.Child
 import com.example.dangram.ui.app.channels.Channels
 import com.example.dangram.ui.app.messages.Messages
+import com.example.dangram.ui.app.search.Search
 import io.getstream.chat.android.compose.ui.theme.ChatTheme
 import io.getstream.chat.android.compose.ui.theme.StreamShapes
 
@@ -31,6 +32,7 @@ fun App(
             when (val instance = child.instance) {
                 is Child.Channels -> { Channels(component = instance.component) }
                 is Child.Messages -> { Messages(component = instance.component) }
+                is Child.Search -> { Search(component = instance.component) }
             }
         }
     }

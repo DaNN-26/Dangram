@@ -11,23 +11,21 @@ import com.arkivanov.decompose.value.Value
 import com.example.dangram.components.app.AppComponent.Child
 import com.example.dangram.components.app.channels.RealChannelsComponent
 import com.example.dangram.components.app.messages.RealMessagesComponent
+import com.example.dangram.components.app.search.RealSearchComponent
+import com.example.dangram.stream.repository.domain.StreamRepository
 import com.google.firebase.auth.FirebaseAuth
 import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.models.User
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 class RealAppComponent @Inject constructor(
     private val componentContext: ComponentContext,
     private val chatClient: ChatClient,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val streamRepository: StreamRepository
 ) : AppComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
-
-    init {
-        connectUser()
-    }
 
     override val stack: Value<ChildStack<*, Child>> =
         childStack(
@@ -40,12 +38,17 @@ class RealAppComponent @Inject constructor(
 
     private fun child(config: Config, componentContext: ComponentContext) =
         when(config) {
-            is Config.Channels -> Child.Channels(component = channelsComponent(componentContext))
+            is Config.Channels -> Child.Channels(
+                component = channelsComponent(componentContext)
+            )
             is Config.Messages -> Child.Messages(
                 component = messagesComponent(
                     config = Config.Messages(config.channelId),
                     componentContext = componentContext
                 )
+            )
+            is Config.Search -> Child.Search(
+                component = searchComponent(componentContext)
             )
         }
 
@@ -56,7 +59,8 @@ class RealAppComponent @Inject constructor(
             chatClient = chatClient,
             navigateToChannel = { channel ->
                 navigation.push(Config.Messages(channel.cid))
-            }
+            },
+            navigateToSearch = { navigation.push(Config.Search) }
         )
 
     private fun messagesComponent(
@@ -69,22 +73,17 @@ class RealAppComponent @Inject constructor(
             navigateBack = { navigation.pop() }
         )
 
-    private fun connectUser() {
-        val firebaseUser = firebaseAuth.currentUser
-
-        val user =
-            User(
-                id = firebaseUser?.uid.toString(),
-                name = firebaseUser?.email.toString()
-            )
-
-        val token = chatClient.devToken(userId = user.id)
-
-        chatClient.connectUser(
-            user = user,
-            token = token
-        ).enqueue()
-    }
+    @OptIn(DelicateDecomposeApi::class)
+    private fun searchComponent(componentContext: ComponentContext) =
+        RealSearchComponent(
+            componentContext = componentContext,
+            firebaseAuth = firebaseAuth,
+            streamRepository = streamRepository,
+            navigateBack = { navigation.pop() },
+            navigateToChannel = { channel ->
+                navigation.push(Config.Messages(channel.cid))
+            }
+        )
 
     @Serializable
     sealed interface Config {
@@ -92,5 +91,7 @@ class RealAppComponent @Inject constructor(
         data object Channels : Config
         @Serializable
         data class Messages(val channelId: String) : Config
+        @Serializable
+        data object Search : Config
     }
 }

@@ -12,6 +12,7 @@ import com.example.dangram.components.auth.RealAuthComponent
 import com.example.dangram.components.root.RootComponent.Child
 import com.example.dangram.firebase.auth.signIn.domain.SignInRepository
 import com.example.dangram.firebase.auth.signUp.domain.SignUpRepository
+import com.example.dangram.stream.repository.domain.StreamRepository
 import com.google.firebase.auth.FirebaseAuth
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.serialization.Serializable
@@ -22,7 +23,8 @@ class RealRootComponent @Inject constructor(
     private val chatClient: ChatClient,
     private val firebaseAuth: FirebaseAuth,
     private val signInRepository: SignInRepository,
-    private val signUpRepository: SignUpRepository
+    private val signUpRepository: SignUpRepository,
+    private val streamRepository: StreamRepository
 ) : RootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -38,31 +40,33 @@ class RealRootComponent @Inject constructor(
 
     private fun child(config: Config, componentContext: ComponentContext) =
         when(config) {
-            Config.Auth -> Child.Auth(component = authComponent(componentContext))
-            Config.App -> Child.App(component = appComponent(componentContext))
+            is Config.Auth -> Child.Auth(component = authComponent(componentContext))
+            is Config.App -> Child.App(component = appComponent(componentContext))
         }
 
     @OptIn(DelicateDecomposeApi::class)
     private fun authComponent(componentContext: ComponentContext) =
         RealAuthComponent(
             componentContext = componentContext,
+            chatClient = chatClient,
             signInRepository = signInRepository,
             signUpRepository = signUpRepository,
-            navigateToApp = { navigation.push(Config.App) },
-            firebaseAuth = firebaseAuth
+            navigateToApp = { navigation.push(Config.App) }
         )
 
     private fun appComponent(componentContext: ComponentContext) =
         RealAppComponent(
             componentContext = componentContext,
             chatClient = chatClient,
-            firebaseAuth = firebaseAuth
+            firebaseAuth = firebaseAuth,
+            streamRepository = streamRepository
         )
 
     @Serializable
     sealed interface Config {
         @Serializable
         data object Auth : Config
+
         @Serializable
         data object App : Config
     }

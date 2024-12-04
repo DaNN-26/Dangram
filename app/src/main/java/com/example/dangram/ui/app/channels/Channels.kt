@@ -21,22 +21,18 @@ fun Channels(
 ) {
     val state by component.state.subscribeAsState()
 
-    component.checkLoading()
-    when(state.isInitialized) {
-        true -> {
-            ChannelsScreen(
-                title = stringResource(id = R.string.app_name),
-                onChannelClick = { component.processIntent(ChannelsIntent.NavigateToChannel(it)) }
-            )
+    if(state.isConnected)
+        ChannelsScreen(
+            title = stringResource(id = R.string.app_name),
+            onChannelClick = { component.processIntent(ChannelsIntent.NavigateToChannel(it)) },
+            onHeaderActionClick = { component.processIntent(ChannelsIntent.NavigateToSearch) }
+        )
+    else
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(text = "Loading...")
         }
-        false -> {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text(text = "Loading...")
-            }
-        }
-    }
 }

@@ -1,8 +1,8 @@
 package com.example.dangram.firebase.auth.signIn.data
 
-import com.example.dangram.firebase.auth.model.User
 import com.example.dangram.firebase.auth.signIn.domain.SignInRepository
 import com.google.firebase.auth.FirebaseAuth
+import io.getstream.chat.android.models.User
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -17,7 +17,7 @@ class SignInRepositoryImpl @Inject constructor(
                 .addOnSuccessListener { result ->
                     val user = result.user
                     if (user != null)
-                        continuation.resume(User(user.uid, user.email.orEmpty()))
+                        continuation.resume(User(id = user.uid, extraData = mapOf("name" to user.email.orEmpty())))
                 }
                 .addOnFailureListener { exception ->
                     continuation.resumeWithException(exception)

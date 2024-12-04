@@ -4,4 +4,6 @@ sealed class SignUpIntent {
     class OnEmailChanged(val email: String) : SignUpIntent()
     class OnPasswordChanged(val password: String) : SignUpIntent()
     data object SignUp : SignUpIntent()
+    data object NavigateToSignIn : SignUpIntent()
+
 }
