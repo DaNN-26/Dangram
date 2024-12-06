@@ -36,7 +36,7 @@ class StreamRepositoryImpl @Inject constructor(
     override suspend fun createChannel(userId: String, currentUserId: String): Channel =
         withContext(Dispatchers.IO) {
             val clientChannel =
-                chatClient.channel(channelType = "messaging", channelId = "general")
+                chatClient.channel(channelType = "messaging", channelId = "")
             val channel =
                 clientChannel.create(
                     memberIds = listOf(userId, currentUserId),

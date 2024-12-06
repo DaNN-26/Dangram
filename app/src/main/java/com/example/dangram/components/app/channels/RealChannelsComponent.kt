@@ -36,8 +36,8 @@ class RealChannelsComponent @Inject constructor(
 
     override fun processIntent(intent: ChannelsIntent) {
         when (intent) {
-            is ChannelsIntent.NavigateToChannel -> { navigateToChannel(intent.channel) }
-            is ChannelsIntent.NavigateToSearch -> { navigateToSearch() }
+            is ChannelsIntent.NavigateToChannel -> navigateToChannel(intent.channel)
+            is ChannelsIntent.NavigateToSearch -> navigateToSearch()
         }
     }
 

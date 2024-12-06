@@ -51,6 +51,7 @@ fun Search(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
+        modifier = Modifier.padding(top = 16.dp),
         topBar = {
             PollDialogHeader(
                 title = "User Search",

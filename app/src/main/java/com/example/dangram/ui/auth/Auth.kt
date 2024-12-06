@@ -10,25 +10,21 @@ import com.example.dangram.components.auth.AuthComponent
 import com.example.dangram.components.auth.AuthComponent.Child
 import com.example.dangram.ui.auth.signIn.SignIn
 import com.example.dangram.ui.auth.signUp.SignUp
-import io.getstream.chat.android.compose.ui.theme.ChatTheme
 
 @Composable
 fun Auth(
     component: AuthComponent
 ) {
-    ChatTheme {
-        Children(
-            stack = component.stack,
-            animation = stackAnimation(fade() + scale())
-        ) { child ->
-            when (val instance = child.instance) {
-                is Child.SignUp -> {
-                    SignUp(component = instance.component)
-                }
-
-                is Child.SignIn -> {
-                    SignIn(component = instance.component)
-                }
+    Children(
+        stack = component.stack,
+        animation = stackAnimation(fade() + scale())
+    ) { child ->
+        when (val instance = child.instance) {
+            is Child.SignUp -> {
+                SignUp(component = instance.component)
+            }
+            is Child.SignIn -> {
+                SignIn(component = instance.component)
             }
         }
     }

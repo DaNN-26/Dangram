@@ -3,6 +3,7 @@ package com.example.dangram
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import com.arkivanov.decompose.defaultComponentContext
 import com.example.dangram.components.root.RealRootComponent
 import com.example.dangram.firebase.auth.di.AuthModule
@@ -39,6 +40,8 @@ class MainActivity : ComponentActivity() {
             signUpRepository = AuthModule.provideSignUpRepository(firebaseAuth),
             streamRepository = StreamModule.provideStreamRepository(chatClient)
         )
+
+        enableEdgeToEdge()
 
         setContent {
             Root(component = rootComponent)

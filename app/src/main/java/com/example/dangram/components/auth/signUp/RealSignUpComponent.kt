@@ -31,10 +31,12 @@ class RealSignUpComponent @Inject constructor(
 
     override fun processIntent(intent: SignUpIntent) {
         when (intent) {
+            is SignUpIntent.OnEmailChanged -> { _state.update { it.copy(email = intent.email) } }
+            is SignUpIntent.OnPasswordChanged -> { _state.update { it.copy(password = intent.password) } }
+            is SignUpIntent.UpdateIsError -> { _state.update { it.copy(isError = false) } }
+            is SignUpIntent.UpdatePasswordVisibility -> { _state.update { it.copy(isPasswordVisible = intent.isVisible) } }
             is SignUpIntent.SignUp -> { signUp() }
             is SignUpIntent.NavigateToSignIn -> { navigateToSignIn() }
-            is SignUpIntent.OnEmailChanged -> { state.update { it.copy(email = intent.email) } }
-            is SignUpIntent.OnPasswordChanged -> { state.update { it.copy(password = intent.password) } }
         }
     }
 
@@ -50,6 +52,7 @@ class RealSignUpComponent @Inject constructor(
                 navigateToApp()
             } catch (e: Exception) {
                 Log.d("FirebaseSignUp Error", e.message.toString())
+                _state.update { it.copy(isError = true) }
             }
         }
     }

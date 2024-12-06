@@ -1,12 +1,11 @@
 package com.example.dangram.components.app.messages
 
+import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
 import com.example.dangram.mvi.app.messages.MessagesIntent
 import com.example.dangram.mvi.app.messages.MessagesState
-import kotlinx.serialization.serializer
 import javax.inject.Inject
 
 class RealMessagesComponent @Inject constructor(
@@ -22,12 +21,14 @@ class RealMessagesComponent @Inject constructor(
     override val state = _state
 
     init {
-        _state.update { it.copy(channelId = channelId) }
+        processIntent(MessagesIntent.LoadChannel)
+        Log.d("ChannelID", channelId)
     }
 
     override fun processIntent(intent: MessagesIntent) {
         when (intent) {
-            is MessagesIntent.NavigateBack -> { navigateBack() }
+            is MessagesIntent.LoadChannel -> _state.update { it.copy(channelId = channelId) }
+            is MessagesIntent.NavigateBack -> navigateBack()
         }
     }
 

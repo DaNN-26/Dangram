@@ -82,7 +82,6 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.common.ktx)
 
-
     //decompose
     implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
     implementation("com.arkivanov.decompose:extensions-compose:$decomposeVersion")
@@ -97,4 +96,7 @@ dependencies {
 
     //serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+
+    //material icons
+    implementation("androidx.compose.material:material-icons-extended:1.7.5")
 }

@@ -34,11 +34,11 @@ class RealSearchComponent @Inject constructor(
 
     override fun processIntent(intent: SearchIntent) {
         when (intent) {
-            is SearchIntent.OnEmailChanged -> { _state.update { it.copy(email = intent.email) } }
-            is SearchIntent.SearchByEmail -> { searchByEmail() }
-            is SearchIntent.SetFalseIsUserFounded -> { _state.update { it.copy(isUserFounded = false) } }
-            is SearchIntent.CreateChannel -> { createChannel() }
-            is SearchIntent.NavigateBack -> { navigateBack() }
+            is SearchIntent.OnEmailChanged -> _state.update { it.copy(email = intent.email) }
+            is SearchIntent.SearchByEmail -> searchByEmail()
+            is SearchIntent.SetFalseIsUserFounded -> _state.update { it.copy(isUserFounded = false) }
+            is SearchIntent.CreateChannel -> createChannel()
+            is SearchIntent.NavigateBack -> navigateBack()
         }
     }
 
