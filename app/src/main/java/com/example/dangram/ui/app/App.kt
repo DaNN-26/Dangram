@@ -1,6 +1,7 @@
 package com.example.dangram.ui.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
@@ -11,6 +12,7 @@ import com.example.dangram.components.app.AppComponent.Child
 import com.example.dangram.ui.app.channels.Channels
 import com.example.dangram.ui.app.messages.Messages
 import com.example.dangram.ui.app.search.Search
+import io.getstream.chat.android.compose.viewmodel.messages.MessagesViewModelFactory
 
 @Composable
 fun App(

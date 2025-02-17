@@ -93,6 +93,8 @@ dependencies {
     //hilt
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 
     //serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")

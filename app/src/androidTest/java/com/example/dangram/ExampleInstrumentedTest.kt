@@ -1,12 +1,15 @@
 package com.example.dangram
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -15,10 +18,31 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+    private val firebaseAuth: FirebaseAuth = Firebase.auth
+
     @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.dangram", appContext.packageName)
+    fun TestIncorrectInputAuth() = runBlocking {
+        val testEmail = "dan@gmail.com"
+        val invalidPassword = "super"
+
+        try {
+            firebaseAuth.signInWithEmailAndPassword(testEmail, invalidPassword).await()
+            fail("Авторизация с неверным паролем должна вызывать ошибку")
+        } catch (e: Exception) {
+            assertNotNull("Ожидаемое исключение должно быть получено", e)
+        }
+    }
+
+    @Test
+    fun TestExistUserRegistration() = runBlocking {
+        val testEmail = "dan@gmail.com"
+        val testPassword = "super26"
+
+        try {
+            firebaseAuth.createUserWithEmailAndPassword(testEmail, testPassword).await()
+            fail("Регистрация с уже существующим пользователем должна вызывать ошибку")
+        } catch (e: Exception) {
+            assertNotNull("Ожидаемое исключение должно быть получено", e)
+        }
     }
 }

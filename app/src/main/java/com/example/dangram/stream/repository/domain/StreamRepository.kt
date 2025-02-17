@@ -7,4 +7,6 @@ interface StreamRepository {
     suspend fun findUserByEmail(email: String): User?
 
     suspend fun createChannel(userId: String, currentUserId: String): Channel?
+
+    suspend fun loadChannel(channelId: String)
 }

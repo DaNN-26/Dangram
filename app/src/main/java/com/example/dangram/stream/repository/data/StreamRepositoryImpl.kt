@@ -44,4 +44,11 @@ class StreamRepositoryImpl @Inject constructor(
                 ).await()
             return@withContext channel.getOrNull() ?: throw Exception("Channel not created")
         }
+
+    override suspend fun loadChannel(channelId: String) =
+        withContext(Dispatchers.IO) {
+            val channelClient =
+                chatClient.channel(channelId)
+            channelClient.watch().enqueue()
+        }
 }

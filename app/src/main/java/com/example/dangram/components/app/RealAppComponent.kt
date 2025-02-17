@@ -1,5 +1,6 @@
 package com.example.dangram.components.app
 
+import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
@@ -15,6 +16,9 @@ import com.example.dangram.components.app.search.RealSearchComponent
 import com.example.dangram.stream.repository.domain.StreamRepository
 import com.google.firebase.auth.FirebaseAuth
 import io.getstream.chat.android.client.ChatClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
@@ -26,6 +30,8 @@ class RealAppComponent @Inject constructor(
 ) : AppComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
+
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override val stack: Value<ChildStack<*, Child>> =
         childStack(
@@ -69,8 +75,9 @@ class RealAppComponent @Inject constructor(
     ) =
         RealMessagesComponent(
             componentContext = componentContext,
+            chatClient = chatClient,
             channelId = config.channelId,
-            navigateBack = { navigation.pop() }
+            navigateBack = { navigation.pop() },
         )
 
     @OptIn(DelicateDecomposeApi::class)
@@ -84,6 +91,16 @@ class RealAppComponent @Inject constructor(
                 navigation.push(Config.Messages(channel.cid))
             }
         )
+
+    private fun loadChannel(channelId: String) {
+        scope.launch {
+            try {
+                streamRepository.loadChannel(channelId)
+            } catch (e: Exception) {
+                Log.d("Loading Channel", e.message.toString())
+            }
+        }
+    }
 
     @Serializable
     sealed interface Config {

@@ -6,6 +6,5 @@ import com.example.dangram.mvi.app.messages.MessagesState
 
 interface MessagesComponent {
     val state: Value<MessagesState>
-
     fun processIntent(intent: MessagesIntent)
 }

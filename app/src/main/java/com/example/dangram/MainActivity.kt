@@ -26,11 +26,12 @@ class MainActivity : ComponentActivity() {
         val statePluginFactory =
             StreamStatePluginFactory(config = StatePluginConfig(), appContext = this)
 
-        val chatClient = StreamModule.provideChatClient(
-            appContext = this,
-            offlinePluginFactory = offlinePluginFactory,
-            statePluginFactory = statePluginFactory
-        )
+        val chatClient =
+            StreamModule.provideChatClient(
+                appContext = this,
+                offlinePluginFactory = offlinePluginFactory,
+                statePluginFactory = statePluginFactory
+            )
 
         val rootComponent = RealRootComponent(
             componentContext = defaultComponentContext(),
